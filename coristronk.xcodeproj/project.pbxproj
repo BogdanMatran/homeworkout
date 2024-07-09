@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2440829C2C3D1C1A001BC6AA /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2440829B2C3D1C1A001BC6AA /* ProgressBar.swift */; };
 		24DD97D12C3BDB4100B5B117 /* coristronkApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD97D02C3BDB4100B5B117 /* coristronkApp.swift */; };
 		24DD97D32C3BDB4100B5B117 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD97D22C3BDB4100B5B117 /* ContentView.swift */; };
 		24DD97D52C3BDB4100B5B117 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24DD97D42C3BDB4100B5B117 /* Item.swift */; };
@@ -15,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2440829B2C3D1C1A001BC6AA /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		24DD97CD2C3BDB4100B5B117 /* coristronk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = coristronk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		24DD97D02C3BDB4100B5B117 /* coristronkApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = coristronkApp.swift; sourceTree = "<group>"; };
 		24DD97D22C3BDB4100B5B117 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -55,6 +57,7 @@
 			children = (
 				24DD97D02C3BDB4100B5B117 /* coristronkApp.swift */,
 				24DD97D22C3BDB4100B5B117 /* ContentView.swift */,
+				2440829B2C3D1C1A001BC6AA /* ProgressBar.swift */,
 				24DD97D42C3BDB4100B5B117 /* Item.swift */,
 				24DD97D62C3BDB4500B5B117 /* Assets.xcassets */,
 				24DD97D82C3BDB4500B5B117 /* Preview Content */,
@@ -142,6 +145,7 @@
 			files = (
 				24DD97D32C3BDB4100B5B117 /* ContentView.swift in Sources */,
 				24DD97D52C3BDB4100B5B117 /* Item.swift in Sources */,
+				2440829C2C3D1C1A001BC6AA /* ProgressBar.swift in Sources */,
 				24DD97D12C3BDB4100B5B117 /* coristronkApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
