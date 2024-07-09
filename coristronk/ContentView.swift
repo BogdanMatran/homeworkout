@@ -42,9 +42,9 @@ struct ContentView: View {
                         .edgesIgnoringSafeArea(.all)
                     VStack(alignment: .leading, spacing: 20) {
                         // day display for each exercise
+                        Spacer()
                         HStack {
                             Spacer()
-                            
                             ZStack {
                                 ProgressBar(progress: $progressFlotari, fillColor: .constant(Color(hex: "#88b04b")), image: .constant("arm"))
                                     .padding(40)
@@ -53,12 +53,15 @@ struct ContentView: View {
                                 ProgressBar(progress: $progressSquat, fillColor: .constant(Color(hex: "#ff6f61")), image: .constant("leg"))
                                 if goalAchieved {
                                     VStack {
-                                        Text("Bravo love 😘")
+                                        Text("Bravo love \n 😘")
+                                            .multilineTextAlignment(.center)
+                                            .font(.caption)
                                         Image(systemName: "fireworks").foregroundColor(.red)
                                     }
                                 } else {
                                     Text("You got this \n babe")
                                         .multilineTextAlignment(.center)
+                                        .font(.caption)
                                 }
                             }
                             Spacer()
@@ -98,8 +101,6 @@ struct ContentView: View {
                         .cornerRadius(8)
                         .padding(.horizontal)
                         HStack {
-                            Spacer()
-                            
                             Button(action: {
                                 let decreaseAmount: Int
                                 switch selectedStep {
@@ -129,9 +130,7 @@ struct ContentView: View {
                             Text("\(amount)")
                                 .foregroundColor(.black)
                                 .font(.largeTitle)
-                            
                             Spacer()
-                            
                             Button(action: {
                                 let increaseAmount: Int
                                 switch selectedStep {
@@ -153,8 +152,17 @@ struct ContentView: View {
                                     .clipShape(Circle())
                                     .shadow(color: .black.opacity(0.5), radius: 3, x: 1, y: 1)
                             }
-                            
                             Spacer()
+                            Button(action: addItem) {
+                                Image(systemName: "checkmark")
+                                    .font(.system(size: 20, weight: .bold))
+                                    .foregroundColor(.green)
+                                    .frame(width: 128, height: 64)
+                                    .background(Color.white)
+                                    .clipShape(RoundedRectangle(cornerSize: CGSize(width: 32, height: 32)))
+                                    .shadow(color: .black.opacity(0.5), radius: 3, x: 1, y: 1)
+                            }
+                                
                         }
                         .padding(.horizontal)
                         
@@ -178,15 +186,8 @@ struct ContentView: View {
                         .listStyle(.insetGrouped)
                         .background(Color.clear)
                     }
-                    .navigationTitle("Test app")
-                    .toolbar {
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button(action: addItem) {
-                                Text("Save")
-                                    .foregroundColor(.black)
-                            }
-                        }
-                    }
+                    .navigationTitle("Bubu's workouts")
+                    .navigationBarTitleDisplayMode(.inline)
                     .onTapGesture {
                         hideKeyboard()
                     }
