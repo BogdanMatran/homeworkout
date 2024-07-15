@@ -10,12 +10,12 @@ import SwiftData
 
 @Model
 final class Item {
-    var timestamp: Date
+    var timestamp: String
     var name: String
     var reps: Int
     
     init(timestamp: Date, name: String, reps: Int) {
-        self.timestamp = timestamp
+        self.timestamp = timestamp.formatted(date: .abbreviated, time: .omitted)
         self.name = name
         self.reps = reps
     }

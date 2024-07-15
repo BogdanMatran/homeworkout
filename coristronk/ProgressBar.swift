@@ -19,7 +19,7 @@ struct ProgressBar: View {
                         .opacity(0.3)
                         .foregroundColor(fillColor.opacity(0.5))
                         .frame(width: geometry.size.width, height: geometry.size.height)
-                    
+                   // GradientCircleView()
                     Circle()
                         .trim(from: 0.0, to: CGFloat(self.progress))
                         .stroke(style: StrokeStyle(lineWidth: 20.0, lineCap: .round, lineJoin: .round))
@@ -31,7 +31,7 @@ struct ProgressBar: View {
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 15, height: 15) // Adjust size as needed
-                        .foregroundColor(.black)
+                        .foregroundColor(.white)
                         .position(x: geometry.size.width / 2, y: 0) // Adjust y offset as needed
                 }
             }
@@ -40,5 +40,5 @@ struct ProgressBar: View {
 }
 
 #Preview {
-    ProgressBar(progress: .constant(0.5), fillColor: .constant(.blue), image: .constant("leg"))
+    ProgressBar(progress: .constant(0.5), fillColor: .constant(Color("purple")), image: .constant("leg"))
 }

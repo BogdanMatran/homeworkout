@@ -13,6 +13,7 @@ enum Segment: String, CaseIterable {
     case second = "10"
     case third = "20"
 }
+
 enum Exercitii: String, CaseIterable {
     case flotari = "Flotari"
     case abdomene = "Abdomene"
@@ -21,12 +22,13 @@ enum Exercitii: String, CaseIterable {
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-   
+    @Query(sort: \Item.timestamp, order: .reverse) public var items: [Item]
+
     @State private var amount: Int = 0
     @State private var selectedStep: Segment = .first
     @State private var selectedExercise: Exercitii = .flotari
-    
-    @Query(sort: \Item.timestamp)  private var items: [Item]
+    @State private var showingSheet = false
+    @State private var currentDate = Date()
     @State private var progressFlotari: Float = 0
     @State private var progressAbdomene: Float = 0
     @State private var progressSquat: Float = 0
@@ -38,7 +40,7 @@ struct ContentView: View {
     var body: some View {
             NavigationStack {
                 ZStack {
-                    Color.white
+                    Color("background")
                         .edgesIgnoringSafeArea(.all)
                     VStack(alignment: .leading, spacing: 20) {
                         // day display for each exercise
@@ -46,17 +48,18 @@ struct ContentView: View {
                         HStack {
                             Spacer()
                             ZStack {
-                                ProgressBar(progress: $progressFlotari, fillColor: .constant(Color(hex: "#88b04b")), image: .constant("arm"))
-                                    .padding(40)
-                                ProgressBar(progress: $progressAbdomene, fillColor: .constant(Color(hex: "#6b5b95")), image: .constant("chest"))
-                                    .padding(20)
-                                ProgressBar(progress: $progressSquat, fillColor: .constant(Color(hex: "#ff6f61")), image: .constant("leg"))
+                                ProgressBar(progress: $progressFlotari, fillColor: .constant(Color("almost-white")), image: .constant("arm"))
+                                    .padding(48)
+                                ProgressBar(progress: $progressAbdomene, fillColor: .constant(Color("pink")), image: .constant("chest"))
+                                    .padding(24)
+                                ProgressBar(progress: $progressSquat, fillColor: .constant(Color("purple")), image: .constant("leg"))
                                 if goalAchieved {
                                     VStack {
                                         Text("Bravo love \n 😘")
                                             .multilineTextAlignment(.center)
                                             .font(.caption)
-                                        Image(systemName: "fireworks").foregroundColor(.red)
+                                            .foregroundColor(Color("purple"))
+                                        Image(systemName: "fireworks").foregroundColor(Color("almost-white"))
                                     }
                                 } else {
                                     Text("You got this \n babe")
@@ -69,14 +72,10 @@ struct ContentView: View {
                         .onAppear(perform: {
                             self.calculateProgress()
                         })
-                        Text("Exercise")
-                            .foregroundColor(.black)
-                            .font(.caption)
-                            .padding(.leading)
-                        
                         Picker("Exercises", selection: $selectedExercise) {
                             ForEach(Exercitii.allCases, id: \.self) { exercise in
                                 Text(exercise.rawValue).tag(exercise)
+                                    .foregroundStyle(.white)
                             }
                         }
                         .pickerStyle(SegmentedPickerStyle())
@@ -86,18 +85,13 @@ struct ContentView: View {
                         .onChange(of: selectedExercise) { _ in
                             amount = 0
                         }
-                        Text("Reps")
-                            .foregroundColor(.black)
-                            .font(.caption)
-                            .padding(.leading)
-                        
                         Picker("Step", selection: $selectedStep) {
                             ForEach(Segment.allCases, id: \.self) { step in
                                 Text(step.rawValue).tag(step)
                             }
                         }
                         .pickerStyle(SegmentedPickerStyle())
-                        .background(Color.gray.opacity(0.2))
+                        .background(.clear)
                         .cornerRadius(8)
                         .padding(.horizontal)
                         HStack {
@@ -116,19 +110,22 @@ struct ContentView: View {
                                     amount -= decreaseAmount
                                 }
                             }) {
+                                
                                 Image(systemName: "minus")
                                     .font(.system(size: 20, weight: .bold))
-                                    .foregroundColor(.black)
-                                    .frame(width: 64, height: 64)
-                                    .background(Color.white)
-                                    .clipShape(Circle())
-                                    .shadow(color: .black.opacity(0.5), radius: 3, x: 1, y: 1)
+                                    .foregroundColor(Color("purple"))
+                                    .frame(width: 44, height: 44)
+                                    .background(Color.clear)
+                                    .overlay(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10))
+                                        .stroke(Color("almost-white").opacity(0.5), lineWidth: 2))
+                                    .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
+                                    .shadow(color: Color("almost-white").opacity(0.5), radius: 3, x: 1, y: 1)
                             }
                             
                             Spacer()
                             
                             Text("\(amount)")
-                                .foregroundColor(.black)
+                                .foregroundColor(Color("purple"))
                                 .font(.largeTitle)
                             Spacer()
                             Button(action: {
@@ -146,61 +143,88 @@ struct ContentView: View {
                             }) {
                                 Image(systemName: "plus")
                                     .font(.system(size: 20, weight: .bold))
-                                    .foregroundColor(.black)
-                                    .frame(width: 64, height: 64)
-                                    .background(Color.white)
-                                    .clipShape(Circle())
-                                    .shadow(color: .black.opacity(0.5), radius: 3, x: 1, y: 1)
+                                    .foregroundColor(Color("purple"))
+                                    .frame(width: 44, height: 44)
+                                    .background(Color.clear)
+                                    .overlay(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10))
+                                        .stroke(Color("almost-white").opacity(0.5), lineWidth: 2))
+                                    .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
+                                    .shadow(color: Color("almost-white").opacity(0.5), radius: 3, x: 1, y: 1)
                             }
                             Spacer()
                             Button(action: addItem) {
                                 Image(systemName: "checkmark")
                                     .font(.system(size: 20, weight: .bold))
                                     .foregroundColor(.green)
-                                    .frame(width: 128, height: 64)
-                                    .background(Color.white)
-                                    .clipShape(RoundedRectangle(cornerSize: CGSize(width: 32, height: 32)))
-                                    .shadow(color: .black.opacity(0.5), radius: 3, x: 1, y: 1)
+                                    .frame(width: 88, height: 44)
+                                    .background(Color.clear)
+                                    .overlay(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10))
+                                        .stroke(Color("almost-white").opacity(0.5), lineWidth: 2))
+                                    .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
+                                    .shadow(color: Color("almost-white").opacity(0.5), radius: 3, x: 1, y: 1)
                             }
-                                
+                            Spacer()
+                            Button(action: showCalendar) {
+                                Image(systemName: "calendar")
+                                    .font(.system(size: 20, weight: .bold))
+                                    .foregroundColor(.black)
+                                    .frame(width: 44, height: 44)
+                                    .background(Color.clear)
+                                    .overlay(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10))
+                                        .stroke(Color("almost-white").opacity(0.5), lineWidth: 2))
+                                    .clipShape(RoundedRectangle(cornerSize: CGSize(width: 10, height: 10)))
+                                    .shadow(color: Color("almost-white").opacity(0.5), radius: 3, x: 1, y: 1)
+                            }
                         }
                         .padding(.horizontal)
-                        
                         List {
-                            ForEach(items) { exercise in
+                            ForEach(items.filter{$0.timestamp == currentDate.formatted(date: .abbreviated, time: .omitted)}) { exercise in
                                 VStack(alignment: .leading, content: {
                                     HStack {
                                         Text(exercise.name)
                                             .font(.headline)
+                                            .foregroundStyle(Color("purple"))
                                         Spacer()
                                         Text("\(exercise.reps)")
                                             .font(.subheadline)
+                                            .foregroundStyle(Color("pink"))
                                     }
                                     .padding(.vertical)
-                                    Text(exercise.timestamp, format: .dateTime.month(.wide).day().year())
+                                    Text(exercise.timestamp)
                                         .font(.caption)
+                                        .foregroundStyle(Color("almost-white"))
                                  })
                             }
                             .onDelete(perform: deleteItems)
                         }
-                        .listStyle(.insetGrouped)
+                        .listStyle(.plain)
                         .background(Color.clear)
                     }
-                    .navigationTitle("Bubu's workouts")
+                    .navigationTitle("Bubu's workouts \(currentDate.formatted(date: .abbreviated, time: .omitted))")
                     .navigationBarTitleDisplayMode(.inline)
                     .onTapGesture {
                         hideKeyboard()
                     }
                 }
             }
+            .sheet(isPresented: $showingSheet) {
+                CalendarView(selectedDate: $currentDate)
+            }
+            .onAppear() {
+                calculateProgress()
+            }
         }
-
+    
+    private func showCalendar() {
+        showingSheet.toggle()
+    }
+    
     private func addItem() {
         if amount == 0 {
             return
         }
         withAnimation {
-            let newItem = Item(timestamp: Date(), name: selectedExercise.rawValue, reps: amount)
+            let newItem = Item(timestamp: currentDate, name: selectedExercise.rawValue, reps: amount)
             modelContext.insert(newItem)
             try? modelContext.save()
             calculateProgress()
@@ -222,7 +246,7 @@ struct ContentView: View {
     }
     
     private func calculateProgress() {
-        let todayItems = items.filter { Calendar.current.isDateInToday($0.timestamp) }
+        let todayItems = items.filter { $0.timestamp == currentDate.formatted(date: .abbreviated, time: .omitted) }
         progressFlotari = Float(todayItems.filter { $0.name == Exercitii.flotari.rawValue }.reduce(0) { $0 + $1.reps }) / 100
         progressAbdomene = Float(todayItems.filter { $0.name == Exercitii.abdomene.rawValue }.reduce(0) { $0 + $1.reps }) / 100
         progressSquat = Float(todayItems.filter { $0.name == Exercitii.squat.rawValue }.reduce(0) { $0 + $1.reps }) / 100
@@ -239,6 +263,7 @@ struct ContentView: View {
     ContentView()
         .modelContainer(for: Item.self, inMemory: true)
 }
+
 extension Color {
     init(hex: String) {
         let hex = hex.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
