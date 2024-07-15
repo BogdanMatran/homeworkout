@@ -208,7 +208,7 @@ struct ContentView: View {
                 }
             }
             .sheet(isPresented: $showingSheet) {
-                CalendarView(selectedDate: $currentDate)
+                CalendarView(selectedDate: $currentDate, items: self.items)
             }
             .onAppear() {
                 calculateProgress()
