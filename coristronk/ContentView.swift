@@ -213,6 +213,9 @@ struct ContentView: View {
             .onAppear() {
                 calculateProgress()
             }
+            .onChange(of: currentDate, perform: { _ in
+                self.calculateProgress()
+            })
         }
     
     private func showCalendar() {
