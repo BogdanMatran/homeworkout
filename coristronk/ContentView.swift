@@ -23,12 +23,12 @@ enum Exercitii: String, CaseIterable {
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Item.timestamp, order: .reverse) public var items: [Item]
+    @State private var currentDate = Date()
 
     @State private var amount: Int = 0
     @State private var selectedStep: Segment = .first
     @State private var selectedExercise: Exercitii = .flotari
     @State private var showingSheet = false
-    @State private var currentDate = Date()
     @State private var progressFlotari: Float = 0
     @State private var progressAbdomene: Float = 0
     @State private var progressSquat: Float = 0
@@ -237,7 +237,7 @@ struct ContentView: View {
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             for index in offsets {
-                modelContext.delete(items[index])
+                modelContext.delete(items.filter { $0.timestamp == currentDate.formatted(date: .abbreviated, time: .omitted) }[index])
                 try? modelContext.save()
                 calculateProgress()
             }
@@ -290,5 +290,13 @@ extension Color {
             blue: Double(b) / 255,
             opacity: Double(a) / 255
         )
+    }
+}
+struct ColorDetail: View {
+    var color: Color
+
+
+    var body: some View {
+        color.navigationTitle(color.description)
     }
 }
