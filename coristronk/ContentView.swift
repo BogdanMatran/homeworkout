@@ -7,14 +7,19 @@
 
 import SwiftUI
 import SwiftData
+import CustomizableSegmentedControl
 
-enum Segment: String, CaseIterable {
+enum Segment: String, CaseIterable, Identifiable, Hashable {
+    var id: String { rawValue }
+    
     case first = "1"
     case second = "10"
     case third = "20"
 }
 
-enum Exercitii: String, CaseIterable {
+enum Exercitii: String, CaseIterable, Identifiable, Hashable {
+    var id: String { rawValue }
+    
     case flotari = "Flotari"
     case abdomene = "Abdomene"
     case squat = "Genuflexiuni"
@@ -72,28 +77,63 @@ struct ContentView: View {
                         .onAppear(perform: {
                             self.calculateProgress()
                         })
-                        Picker("Exercises", selection: $selectedExercise) {
-                            ForEach(Exercitii.allCases, id: \.self) { exercise in
-                                Text(exercise.rawValue).tag(exercise)
-                                    .foregroundStyle(.white)
+                        CustomizableSegmentedControl(
+                            selection: $selectedExercise,
+                            options: [Exercitii.flotari, Exercitii.abdomene, Exercitii.squat],
+                            selectionView: {
+                                Color.white
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                            },
+                            segmentContent: { option, isPressed in
+                                HStack(spacing: 4) {
+                                    Text(option.rawValue)
+                                        .font(.system(size: 12, weight: .semibold, design: .rounded))
+
+                                }
+                                .foregroundColor(.white.opacity(isPressed ? 0.7 : 1))
+                                .lineLimit(1)
+                                .padding(.vertical, 5)
+                                .padding(.horizontal, 5)
+                                .frame(maxWidth: .infinity)
                             }
-                        }
-                        .pickerStyle(SegmentedPickerStyle())
-                        .background(.clear)
-                        .cornerRadius(8)
-                        .padding(.horizontal)
-                        .onChange(of: selectedExercise) { _ in
+                        )
+                        .insets(.all, 4)
+                        .segmentedControlContentStyle(.blendMode())
+                        .segmentedControl(interSegmentSpacing: 2)
+                        .segmentedControlSlidingAnimation(.bouncy)
+                        .background(Color("almost-white"))
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                        .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
+                        .onChange(of: selectedExercise ){
                             amount = 0
                         }
-                        Picker("Step", selection: $selectedStep) {
-                            ForEach(Segment.allCases, id: \.self) { step in
-                                Text(step.rawValue).tag(step)
+                        CustomizableSegmentedControl(
+                            selection: $selectedStep,
+                            options: [Segment.first, Segment.second, Segment.third],
+                            selectionView: {
+                                Color.white
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                            },
+                            segmentContent: { option, isPressed in
+                                HStack(spacing: 4) {
+                                    Text(option.rawValue)
+                                        .font(.system(size: 12, weight: .semibold, design: .rounded))
+
+                                }
+                                .foregroundColor(.white.opacity(isPressed ? 0.7 : 1))
+                                .lineLimit(1)
+                                .padding(.vertical, 5)
+                                .padding(.horizontal, 5)
+                                .frame(maxWidth: .infinity)
                             }
-                        }
-                        .pickerStyle(SegmentedPickerStyle())
-                        .background(.clear)
-                        .cornerRadius(8)
-                        .padding(.horizontal)
+                        )
+                        .insets(.all, 4)
+                        .segmentedControlContentStyle(.blendMode())
+                        .segmentedControl(interSegmentSpacing: 2)
+                        .segmentedControlSlidingAnimation(.bouncy)
+                        .background(Color("almost-white"))
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
+                        .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
                         HStack {
                             Button(action: {
                                 let decreaseAmount: Int
